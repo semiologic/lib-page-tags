@@ -1,8 +1,8 @@
 <?php
 /*
  * Page Tags
- * Author: Denis de Bernardy <http://www.mesoconcepts.com>
- * Version: 2.0.3
+ * Author: Denis de Bernardy & Mike Koepke <http://www.semiologic.com>
+ * Version: 2.1
  */
 
 
@@ -13,6 +13,19 @@
  **/
 
 class page_tags {
+    /** 
+     * page_tags
+     * */   
+    function page_tags() {
+        add_action('admin_print_scripts-page.php', array($this, 'scripts'));
+        add_action('admin_print_scripts-page-new.php', array($this, 'scripts'));
+        if ( function_exists('is_multisite') ) {
+        	add_action('admin_print_scripts-post.php', array($this, 'scripts'));
+        	add_action('admin_print_scripts-post-new.php', array($this, 'scripts'));
+        }        
+    } #page_tags()
+    
+    
 	/**
 	 * scripts()
 	 *
@@ -48,13 +61,13 @@ class page_tags {
 	 * @return void
 	 **/
 	
-	function meta_boxes() {
+	static function meta_boxes() {
 		static $done = false;
 		
 		if ( $done )
 			return;
 		
-		add_meta_box('tagsdiv', __('Tags', page_tags_textdomain), array('page_tags', 'display_page_tags'), 'page', 'normal');
+		add_meta_box('tagsdiv', __('Tags', page_tags_textdomain), array($this, 'display_page_tags'), 'page', 'normal');
 		
 		if ( class_exists('autotag') )
 			add_meta_box('autotag', __('Autotag', page_tags_textdomain), array('autotag_admin', 'entry_editor'), 'page', 'normal');
@@ -71,7 +84,7 @@ class page_tags {
 	 * @return void
 	 **/
 	
-	function display_page_tags($post, $box) {
+	static function display_page_tags($post, $box) {
 		$tax_name = 'post_tag';
 		$taxonomy = get_taxonomy($tax_name);
 		$helps = isset($taxonomy->helps)
@@ -97,10 +110,5 @@ class page_tags {
 	} # display_page_tags()
 } # page_tags
 
-add_action('admin_print_scripts-page.php', array('page_tags', 'scripts'));
-add_action('admin_print_scripts-page-new.php', array('page_tags', 'scripts'));
-if ( function_exists('is_multisite') ) {
-	add_action('admin_print_scripts-post.php', array('page_tags', 'scripts'));
-	add_action('admin_print_scripts-post-new.php', array('page_tags', 'scripts'));
-}
+$page_tags = new page_tags();
 ?>
