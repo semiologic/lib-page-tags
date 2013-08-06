@@ -13,19 +13,19 @@
  **/
 
 class page_tags {
-    /** 
+    /**
      * page_tags
-     * */   
+     * */
     function page_tags() {
         add_action('admin_print_scripts-page.php', array($this, 'scripts'));
         add_action('admin_print_scripts-page-new.php', array($this, 'scripts'));
         if ( function_exists('is_multisite') ) {
         	add_action('admin_print_scripts-post.php', array($this, 'scripts'));
         	add_action('admin_print_scripts-post-new.php', array($this, 'scripts'));
-        }        
+        }
     } #page_tags()
-    
-    
+
+
 	/**
 	 * scripts()
 	 *
@@ -42,9 +42,9 @@ class page_tags {
 				return;
 			}
 		}
-		
+
 		$plugin_path = plugin_dir_url(__FILE__);
-		
+
 		wp_enqueue_script('page_tags', $plugin_path . 'js/page-tags.js', array('suggest', 'jquery-ui-tabs', 'wp-lists'), '20090520', true);
 
 		wp_localize_script('page_tags', 'page_tagsL10n', array(
@@ -53,29 +53,29 @@ class page_tags {
 			'l10n_print_after' => 'try{convertEntities(page_tagsL10n);}catch(e){};'
 		));
 	} # scripts()
-	
-	
+
+
 	/**
 	 * meta_boxes()
 	 *
 	 * @return void
 	 **/
-	
+
 	static function meta_boxes() {
 		static $done = false;
-		
+
 		if ( $done )
 			return;
-		
-		add_meta_box('tagsdiv', __('Tags', page_tags_textdomain), array($this, 'display_page_tags'), 'page', 'normal');
-		
+
+		add_meta_box('tagsdiv', __('Tags', page_tags_textdomain), array('page_tags', 'display_page_tags'), 'page', 'normal');
+
 		if ( class_exists('autotag') )
 			add_meta_box('autotag', __('Autotag', page_tags_textdomain), array('autotag_admin', 'entry_editor'), 'page', 'normal');
-		
+
 		$done = true;
 	} # meta_boxes()
-	
-	
+
+
 	/**
 	 * display_page_tags()
 	 *
@@ -83,7 +83,7 @@ class page_tags {
 	 * @param array $box
 	 * @return void
 	 **/
-	
+
 	static function display_page_tags($post, $box) {
 		$tax_name = 'post_tag';
 		$taxonomy = get_taxonomy($tax_name);
