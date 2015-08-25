@@ -2,7 +2,7 @@
 /*
  * Page Tags
  * Author: Denis de Bernardy & Mike Koepke <http://www.semiologic.com>
- * Version: 2.1
+ * Version: 2.1.1
  */
 
 
@@ -111,4 +111,3 @@ class page_tags {
 } # page_tags
 
 $page_tags = new page_tags();
-?>
